@@ -19,7 +19,7 @@ for container in $containerIds
 do
 
     echo "Container: $container"
-    workspaceSpace=$(docker exec -it $container sh -c "du -sk /home/jenkins/workspace")
+    workspaceSpace=$(docker exec $container sh -c "du -sk /home/jenkins/workspace")
     echo $workspaceSpace
     workspaceSpaceNumber=$(echo $workspaceSpace | awk '{print $1}')
     if [[ $workspaceSpaceNumber -gt 3000000 ]]; then
