@@ -11,7 +11,7 @@ hosts:
           Ubuntu2204-Controller-x64-1: {ip: 192.168.56.101, user: scott, description: ansible-controller}
      
       - vbox2:
-	  Ubuntu2204-Nagios_Server-x64-1 {ip: 192.168.56.107, user: root, description: nagios-server}
+          Ubuntu2204-Nagios_Server-x64-1 {ip: 192.168.56.107, user: root, description: nagios-server}
 
   - build:
 
