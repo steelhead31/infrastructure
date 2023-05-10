@@ -1,21 +1,25 @@
 ---
-# Hosts Temporary File For Demos
+
+#
+# AdoptOpenJDK hosts! check the readme on how to add more
+# (if its not obvious enough).
 # Initial host names are "os-arch-index" within each stanza
 #
 
 hosts:
-  - infrastructure:
-    
-    - vbox:
-        Ubuntu2204-Controller-x64-1: {ip: 192.168.56.101, user: scott, description: ansible-controller}
-    - vbox2:
-        Ubuntu2204-Nagios_Server-x64-1 {ip: 192.168.56.107, user: root, description: nagios-server}
 
+  - infrastructure:
+
+      - vbox:
+          Ubuntu2204-Controller-x64-1: {ip: 192.168.56.101, user: scott, description: ansible-controller}
+          Ubuntu2204-Nagios-x64-1 {ip: 192.168.56.107, user: root, description: nagios-server}
+          
   - build:
-    
-    - vbox:
-        ubuntu2204-x64-1: {ip: 192.168.56.104}
+
+      - vbox:
+          ubuntu2204-x64-1: {ip: 192.168.56.104}
 
   - test:
-    - vbox2:
-        ubuntu2204-x64-1: {ip: 119.8.166.108}
+
+      - vbox2:
+          ubuntu2204-x64-1: {ip: 119.8.166.108}
