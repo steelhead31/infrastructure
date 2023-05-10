@@ -13,7 +13,6 @@ hosts:
       - vbox2:
 	  Ubuntu2204-Nagios_Server-x64-1 {ip: 192.168.56.107, user: root, description: nagios-server}
 
-
   - build:
 
       - vbox:
