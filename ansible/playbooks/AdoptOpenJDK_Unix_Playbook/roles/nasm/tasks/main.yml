@@ -114,7 +114,7 @@
 # Compiling nasm on Ubuntu 24 requires a more up to date linker and a patch for a known issue
 # See: https://bugzilla.nasm.us/show_bug.cgi?id=3392461
 
-- name: Download nasm patch fpr Ubuntu 24
+- name: Download nasm patch for Ubuntu 24
   shell: cd /tmp/nasm-2.13.03 && curl https://bugzilla.nasm.us/attachment.cgi?id=411624 -o /tmp/nasm-2.13.03/nasm.patch
   when:
     - (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "24" and ansible_architecture == "x86_64") and (nasm_installed.rc is defined) and ((nasm_installed.rc != 0 ) or (nasm_installed.rc == 0 and nasm.stdout is version_compare('2.13.03', operator='ne')) )
