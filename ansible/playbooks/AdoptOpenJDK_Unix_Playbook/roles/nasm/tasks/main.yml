@@ -114,11 +114,21 @@
 # Compiling nasm on Ubuntu 24 requires a more up to date linker and a patch for a known issue
 # See: https://bugzilla.nasm.us/show_bug.cgi?id=3392461
 
-- name: Download nasm patch for Ubuntu 24
-  shell: cd /tmp/nasm-2.13.03 && curl https://bugzilla.nasm.us/attachment.cgi?id=411624 -o /tmp/nasm-2.13.03/nasm.patch
+# - name: Download nasm patch for Ubuntu 24
+#   shell: cd /tmp/nasm-2.13.03 && curl https://bugzilla.nasm.us/attachment.cgi?id=411624 -o /tmp/nasm-2.13.03/nasm.patch
+#   when:
+#     - (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "24" and ansible_architecture == "x86_64") and (nasm_installed.rc is defined) and ((nasm_installed.rc != 0 ) or (nasm_installed.rc == 0 and nasm.stdout is version_compare('2.13.03', operator='ne')) )
+#   tags: nasm
+
+- name: Copy NASM.patch into place
+  copy:
+    src: files/nasm.patch
+    dest: /tmp/nasm-2.13.03/nasm.patch
+    owner: root
+    group: root
+    mode: 0755
   when:
     - (ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "24" and ansible_architecture == "x86_64") and (nasm_installed.rc is defined) and ((nasm_installed.rc != 0 ) or (nasm_installed.rc == 0 and nasm.stdout is version_compare('2.13.03', operator='ne')) )
-  tags: nasm
 
 - name: Verify checksum for nasm patch for Ubuntu 24
   shell: sha256sum  /tmp/nasm-2.13.03/nasm.patch | grep ^fa28f2941af1f8834fbb8652f0a3d795e491fd7f7f403d8dd0f8e3068b486dcd
