@@ -6,6 +6,11 @@ $script = <<SCRIPT
 if [ -r /vagrant/id_rsa.pub ]; then
         mkdir -p $HOME/.ssh && cat /vagrant/id_rsa.pub >> $HOME/.ssh/authorized_keys
 fi
+## Install Python 3.8 to allow ansible 2.9 to run.
+# sudo add-apt-repository ppa:deadsnakes/ppa -y
+# sudo apt install python3.8 -y
+# sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+# sudo update-alternatives  --set python /usr/bin/python3.8
 SCRIPT
 
 # 2 = version of configuration file for Vagrant 1.1+ leading up to 2.0.x
