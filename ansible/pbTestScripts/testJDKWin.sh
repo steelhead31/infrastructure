@@ -32,5 +32,19 @@ cd openjdk-tests
 ./get.sh -T $HOME/testLocation/openjdk-tests -p x64_windows
 cd TKG
 export BUILD_LIST=system
+
+echo "Test Run 1"
+make compile
+make _extended.system 
+echo "Test Run 2"
+make compile
+make _extended.system 
+echo "Test Run 3"
+make compile
+make _extended.system 
+echo "Test Run 4"
+make compile
+make _extended.system 
+echo "Test Run 5"
 make compile
 make _extended.system 
