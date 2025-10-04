@@ -485,6 +485,7 @@ startVMPlaybookWin()
 					ls -ltr
 					echo "SF02 - Debug END"
 					# Copy PowerShell Script From Vagrant Share For Performance Reasons & Launch
+					vagrant winrm -s powershell -e -c 'cd c:/vagrant; pwd; ls'
 					vagrant winrm -s powershell -e -c 'copy c:/vagrant/testJDK_Tmp.ps1 c:/tmp; cd c:/tmp; pwd; ls'
 					vagrant winrm -e -c 'powershell -ExecutionPolicy Bypass -File c:/tmp/testJDK_Tmp.ps1' | tee $testLogPath
 			else
