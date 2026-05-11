@@ -1,0 +1,27 @@
+{
+  "build_packages": [
+    "gcc",
+    "g++",
+    "xlc",
+    "xlC",
+    "make",
+    "gmake",
+    "cmake",
+    "autoconf",
+    "automake",
+    "libtool",
+    "git",
+    "ant"
+  ],
+  "test_packages": [
+    "python3",
+    "python",
+    "perl",
+    "ksh",
+    "bash",
+    "curl",
+    "wget",
+    "tar",
+    "gzip"
+  ]
+}

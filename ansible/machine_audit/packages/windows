@@ -1,0 +1,19 @@
+{
+  "build_packages": [
+    "nmake",
+    "cmake",
+    "git",
+    "ant",
+    "cygwin"
+  ],
+  "test_packages": [
+    "perl",
+    "powershell",
+    "curl",
+    "wget",
+    "tar",
+    "7z",
+    "zip",
+    "unzip"
+  ]
+}
