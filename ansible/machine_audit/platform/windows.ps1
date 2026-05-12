@@ -60,10 +60,19 @@ function Get-CommandPath {
 
 function Test-PackageInstalled {
     param(
-        [string]$Package
+        [string]$Package,
+        [string]$PackagePath = "default"
     )
     
-    $path = Get-CommandPath -Command $Package
+    $path = $null
+    
+    if ($PackagePath -ne "default" -and (Test-Path $PackagePath)) {
+        $path = $PackagePath
+    }
+    else {
+        $path = Get-CommandPath -Command $Package
+    }
+    
     return @{
         installed = ($null -ne $path)
         path = $path
@@ -82,12 +91,28 @@ function Get-PackageInfo {
     try {
         $packagesData = Get-Content $packagesFile -Raw | ConvertFrom-Json
         
-        foreach ($package in $packagesData.build_packages) {
-            $results.build_packages[$package] = Test-PackageInstalled -Package $package
+        foreach ($packageInfo in $packagesData.build_packages) {
+            if ($packageInfo -is [string]) {
+                $packageName = $packageInfo
+                $packagePath = "default"
+            }
+            else {
+                $packageName = $packageInfo.name
+                $packagePath = $packageInfo.path
+            }
+            $results.build_packages[$packageName] = Test-PackageInstalled -Package $packageName -PackagePath $packagePath
         }
         
-        foreach ($package in $packagesData.test_packages) {
-            $results.test_packages[$package] = Test-PackageInstalled -Package $package
+        foreach ($packageInfo in $packagesData.test_packages) {
+            if ($packageInfo -is [string]) {
+                $packageName = $packageInfo
+                $packagePath = "default"
+            }
+            else {
+                $packageName = $packageInfo.name
+                $packagePath = $packageInfo.path
+            }
+            $results.test_packages[$packageName] = Test-PackageInstalled -Package $packageName -PackagePath $packagePath
         }
     }
     catch {
@@ -165,4 +190,3 @@ function Main {
 }
 
 Main
-

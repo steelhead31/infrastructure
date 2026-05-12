@@ -1,27 +1,90 @@
 {
   "build_packages": [
-    "gcc",
-    "g++",
-    "xlc",
-    "xlC",
-    "make",
-    "gmake",
-    "cmake",
-    "autoconf",
-    "automake",
-    "libtool",
-    "git",
-    "ant"
+    {
+      "name": "JDK8",
+      "path": "/usr/java8_64/bin/java"
+    },
+    {
+      "name": "JDK10",
+      "path": "/usr/java10_64/bin/java"
+    },
+    {
+      "name": "JDK11",
+      "path": "/usr/java11_64/bin/java"
+    },
+    {
+      "name": "JDK17",
+      "path": "/usr/java17_64/bin/java"
+    },
+    {
+      "name": "JDK21",
+      "path": "/usr/java21_64/bin/java"
+    },
+    {
+      "name": "JDK24",
+      "path": "/usr/java24_64/bin/java"
+    },
+    {
+      "name": "JDK25",
+      "path": "/usr/java25_64/bin/java"
+    },
+    {
+      "name": "xlc13",
+      "path": "/opt/IBM/xlc/13.1.3/bin/xlc"
+    },
+    {
+      "name": "xlc13++",
+      "path": "/opt/IBM/xlC/13.1.3/bin/xlc++"
+    },
+    {
+      "name": "xlc16",
+      "path": "/opt/IBM/xlc/16.1.0/bin/xlc"
+    },
+    {
+      "name": "xlc16++",
+      "path": "/opt/IBM/xlC/16.1.0/bin/xlc++"
+    },
+    {
+      "name": "make",
+      "path": "default"
+    },
+    {
+      "name": "gmake",
+      "path": "default"
+    },
+    {
+      "name": "cmake",
+      "path": "default"
+    },
+    {
+      "name": "autoconf",
+      "path": "default"
+    },
+    {
+      "name": "automake",
+      "path": "default"
+    }
   ],
   "test_packages": [
-    "python3",
-    "python",
-    "perl",
-    "ksh",
-    "bash",
-    "curl",
-    "wget",
-    "tar",
-    "gzip"
+    {
+      "name": "ant",
+      "path": "default"
+    },
+    {
+      "name": "perl",
+      "path": "default"
+    },
+    {
+      "name": "git",
+      "path": "default"
+    },
+    {
+      "name": "curl",
+      "path": "default"
+    },
+    {
+      "name": "wget",
+      "path": "default"
+    }
   ]
 }
