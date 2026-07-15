@@ -158,7 +158,24 @@ for IMAGE_NAME in "${IMAGE_LIST[@]}"; do
     sed -i.tmp "s|^export AZURE_IMAGE_DEFINITION=.*|export AZURE_IMAGE_DEFINITION=\"$IMAGE_NAME\"|" "$PROJECT_ROOT/.env"
     sed -i.tmp "s|^export AZURE_SOURCE_IMAGE=.*|export AZURE_SOURCE_IMAGE=\"$AZURE_SOURCE_IMAGE_OVERRIDE\"|" "$PROJECT_ROOT/.env"
     rm -f "$PROJECT_ROOT/.env.tmp"
-    
+
+    # Apply per-image VM size override if defined in AZURE_VM_SIZE_OVERRIDES
+    RESOLVED_VM_SIZE="${AZURE_VM_SIZE}"
+    if [ -n "${AZURE_VM_SIZE_OVERRIDES:-}" ]; then
+        IFS=',' read -ra SIZE_OVERRIDES <<< "$AZURE_VM_SIZE_OVERRIDES"
+        for OVERRIDE in "${SIZE_OVERRIDES[@]}"; do
+            OVERRIDE_NAME="${OVERRIDE%%:*}"
+            OVERRIDE_SIZE="${OVERRIDE##*:}"
+            if [ "$OVERRIDE_NAME" = "$IMAGE_NAME" ]; then
+                sed -i.tmp "/^export AZURE_VM_SIZE_/! s|^export AZURE_VM_SIZE=.*|export AZURE_VM_SIZE=\"$OVERRIDE_SIZE\"|" "$PROJECT_ROOT/.env"
+                rm -f "$PROJECT_ROOT/.env.tmp"
+                RESOLVED_VM_SIZE="$OVERRIDE_SIZE"
+                break
+            fi
+        done
+    fi
+    echo "  VM Size: $RESOLVED_VM_SIZE"
+
     # Start timestamp
     START_TIME=$(date +%s)
     echo "Started at: $(date)" | tee "$IMAGE_LOG"

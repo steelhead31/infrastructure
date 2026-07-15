@@ -56,7 +56,7 @@ Configure images in `.env`:
 export AZURE_IMAGE_DEFINITION="Test-Windows-2022-x64"
 
 # Multiple images for test-full-all-images.sh (comma-separated)
-export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64"
+export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64,Test-Windows11-Arm64"
 ```
 
 ## 🔧 Usage
@@ -212,13 +212,32 @@ export AZURE_SUBNET_NAME="default"
 # Gallery Configuration
 export AZURE_GALLERY_NAME="adoptium_compute_gallery"
 export AZURE_IMAGE_DEFINITION="Test-Windows-2022-x64"
-export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64"
+export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64,Test-Windows11-Arm64"
 
 # VM Configuration
-export AZURE_VM_SIZE="Standard_D2s_v3"
+export AZURE_VM_SIZE="Standard_D2s_v3"          # Default size for x64 images
 export AZURE_ADMIN_USERNAME="adoptopenjdk"
 export AZURE_ADMIN_PASSWORD="your-secure-password"
+
+# Per-image VM size overrides (optional)
+# Required for images with a different CPU architecture (e.g. ARM64)
+# Format: comma-separated "ImageDefinitionName:VmSize" pairs
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5"
 ```
+
+### VM Size Overrides
+
+Some image definitions require a VM size that matches their CPU architecture. For example, ARM64 images cannot be provisioned on x64 VM sizes. Use `AZURE_VM_SIZE_OVERRIDES` to specify a different size for specific images:
+
+```bash
+# Single override
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5"
+
+# Multiple overrides
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5,SomeOtherImage:Standard_D8s_v3"
+```
+
+The override is applied automatically by `1-provision-vm.sh` regardless of whether you run it standalone, via `test-full-workflow.sh`, or via either multi-image script.
 
 ### Adding New Images
 

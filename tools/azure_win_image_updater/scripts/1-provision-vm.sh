@@ -38,6 +38,20 @@ VM_NAME="upd-${TIMESTAMP}"
 RESOURCE_GROUP="${AZURE_RESOURCE_GROUP}"
 LOCATION="${AZURE_LOCATION}"
 VM_SIZE="${AZURE_VM_SIZE:-Standard_D4s_v3}"
+
+# Apply per-image VM size override if defined in AZURE_VM_SIZE_OVERRIDES
+if [ -n "${AZURE_VM_SIZE_OVERRIDES:-}" ]; then
+    IFS=',' read -ra SIZE_OVERRIDES <<< "$AZURE_VM_SIZE_OVERRIDES"
+    for OVERRIDE in "${SIZE_OVERRIDES[@]}"; do
+        OVERRIDE_NAME="${OVERRIDE%%:*}"
+        OVERRIDE_SIZE="${OVERRIDE##*:}"
+        if [ "$OVERRIDE_NAME" = "$AZURE_IMAGE_DEFINITION" ]; then
+            VM_SIZE="$OVERRIDE_SIZE"
+            break
+        fi
+    done
+fi
+
 ADMIN_USERNAME="${AZURE_ADMIN_USERNAME}"
 ADMIN_PASSWORD="${AZURE_ADMIN_PASSWORD}"
 

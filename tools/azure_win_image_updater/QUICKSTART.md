@@ -40,8 +40,15 @@ export AZURE_CLIENT_SECRET="your-client-secret"
 export AZURE_RESOURCE_GROUP="your-resource-group"
 export AZURE_GALLERY_NAME="your-gallery-name"
 export AZURE_IMAGE_DEFINITION="Test-Windows-2022-x64"
-export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64"
+export AZURE_IMAGE_MULTIPLE="Test-Windows-2022-x64,Test-Windows-2025-x64,Test-Windows-11-x64,Test-Windows11-Arm64"
+export AZURE_VM_SIZE="Standard_D2s_v3"
 export AZURE_ADMIN_PASSWORD="YourSecurePassword123!"
+```
+
+**For images that require a different VM architecture** (e.g. ARM64), add per-image size overrides:
+```bash
+# Format: comma-separated "ImageDefinitionName:VmSize" pairs
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5"
 ```
 
 ## 3. Verify Setup (1 minute)

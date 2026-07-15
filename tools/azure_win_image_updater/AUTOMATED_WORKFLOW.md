@@ -64,10 +64,16 @@ source .env
 
 # Set the image to process
 export AZURE_IMAGE_DEFINITION="Test-Windows-2022-x64"
-export AZURE_SOURCE_IMAGE="/subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$AZURE_RESOURCE_GROUP/providers/Microsoft.Compute/galleries/$AZURE_GALLERY_NAME/images/Test-Windows-2022-x64"
 
 # Run automated workflow
 ./scripts/test-full-workflow.sh
+```
+
+For images requiring a different VM architecture (e.g. ARM64), set `AZURE_VM_SIZE_OVERRIDES` in `.env`:
+
+```bash
+# The provisioning script reads this automatically — no manual override needed
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5"
 ```
 
 ### Multiple Images (Wrapper)

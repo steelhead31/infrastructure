@@ -21,13 +21,22 @@ The `AZURE_IMAGE_DEFINITION` variable is used for single image processing, while
 export AZURE_IMAGE_DEFINITION="Test-Windows-2022-x64"
 
 # Multiple images (for test-full-all-images.sh)
-export AZURE_IMAGE_MULTIPLE="Test-Windows-2025-x64,Test-Windows-2022-x64,Test-Windows-11-x64"
+export AZURE_IMAGE_MULTIPLE="Test-Windows-2025-x64,Test-Windows-2022-x64,Test-Windows-11-x64,Test-Windows11-Arm64"
+
+# Default VM size used for all images
+export AZURE_VM_SIZE="Standard_D2s_v3"
+
+# Per-image VM size overrides (optional)
+# Required for images with a different CPU architecture (e.g. ARM64)
+# Format: comma-separated "ImageDefinitionName:VmSize" pairs
+export AZURE_VM_SIZE_OVERRIDES="Test-Windows11-Arm64:Standard_D4plds_v5"
 ```
 
 **Important**:
 - Separate image names with commas (no spaces after commas)
 - Each image must exist in your Azure Compute Gallery
 - The order determines processing sequence
+- ARM64 images require an ARM-compatible VM size — use `AZURE_VM_SIZE_OVERRIDES` to set this per image
 
 ### 2. Verify Gallery Setup
 
