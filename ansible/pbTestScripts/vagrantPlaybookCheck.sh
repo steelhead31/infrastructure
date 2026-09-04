@@ -215,7 +215,7 @@ checkVagrantOS()
 {
         local vagrantOSList
         if [[ "$newVagrantFiles" = "true" ]]; then
-                cd ${WORKSPACE}/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible/vagrant
+                cd "${WORKSPACE}/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible/vagrant"
         else
                 cd ${scriptPath%/*}/../vagrant
         fi
@@ -260,9 +260,9 @@ checkVagrantOS()
 
 setupWorkspace()
 {
-	local workFolder=$WORKSPACE/adoptopenjdkPBTests
-	local gitDirectory=${workFolder}/${gitFork}-${newGitBranch}
-	mkdir -p ${workFolder}/logFiles
+	local workFolder="$WORKSPACE/adoptopenjdkPBTests"
+	local gitDirectory="${workFolder}/${gitFork}-${newGitBranch}"
+	mkdir -p "${workFolder}/logFiles"
 
 	local isRepoInfra=$(curl https://api.github.com/repos/$gitFork/infrastructure | grep "Not Found")
 	local isRepoOpenjdk=$(curl https://api.github.com/repos/$gitFork/openjdk-infrastructure | grep "Not Found")
@@ -276,19 +276,19 @@ setupWorkspace()
 		exit 1
 	fi
 
-	if [[ "$cleanWorkspace" = true && -d ${gitDirectory} ]]; then
+	if [[ "$cleanWorkspace" = true && -d "${gitDirectory}" ]]; then
 		echo "Cleaning old workspace"
-		rm -rf ${gitDirectory}
-	elif [[ "$cleanWorkspace" = true && ! -d ${gitDirectory} ]]; then
+		rm -rf "${gitDirectory}"
+	elif [[ "$cleanWorkspace" = true && ! -d "${gitDirectory}" ]]; then
 		echo "No old workspace detected, moving on"
 	fi
 
 	if [ ! -d "${gitDirectory}" ]; then
-		git clone -b ${gitBranch} --single-branch ${gitRepo} ${gitDirectory} # keep using original branch name
+		git clone -b "${gitBranch}" --single-branch "${gitRepo}" "${gitDirectory}"
 	else
-		cd ${gitDirectory}
+		cd "${gitDirectory}"
 		git pull
-        fi
+	fi
 }
 
 # Takes the OS as arg 1
@@ -299,7 +299,7 @@ startVMPlaybook()
 	local pbLogPath="$WORKSPACE/adoptopenjdkPBTests/logFiles/${gitFork}.${newGitBranch}.$OS.log"
 	local ssh_args=""
 
-	cd $WORKSPACE/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible
+	cd "$WORKSPACE/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible"
 
 	# Select Vagrantfile: append .Libvirt suffix for libvirt provider
 	local vagrantfileSuffix=""
@@ -437,7 +437,7 @@ startVMPlaybookWin()
 	local vagrantPort=
 	local winrmHost="127.0.0.1"
 
-	cd $WORKSPACE/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible
+	cd "$WORKSPACE/adoptopenjdkPBTests/${gitFork}-${newGitBranch}/ansible"
 
 	# Determine the Vagrantfile suffix to use
 	# Priority: libvirt > adopt > default. Windows falls back to virtualbox if no .Libvirt variant exists.
