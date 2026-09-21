@@ -26,6 +26,7 @@ hosts:
 
       - ibmcloud:
           vagrant-x64-1: {ip: 150.239.60.120, cloudloc: oj9, description: Bare metal machine to run vagrantPlaybookCheck and qemuPlaybookCheck}
+          vagrant-x64-2: {ip: 149.81.38.120, user: ubuntu, cloudloc: oj9, description: Replacment ibmcloud machine to run vagrantPlaybookCheck and qemuPlaybookCheck}
 
   - build:
 
@@ -49,6 +50,7 @@ hosts:
 
       - azure:
           ubuntu2204-x64-1: {ip: 52.180.147.157, description: Xeon Platinum 8272CL, 16 cores, 64GB}
+          ubuntu2404-x64-2: {ip: 20.127.197.206, description: Xeon Platinum 8272CL, 8 cores, 32GB}
           win2022-x64-1: {ip: 48.217.233.156, description: AMD EPYC 7763, 2 cores, 4GiB RAM}
           win2022-x64-2: {ip: 51.12.243.178, description: AMD EPYC 7763, 2 cores, 4GiB RAM}
           win2022-x64-3: {ip: 74.235.196.238, description: Intel Xeon PLattinum AMD EPYC 7763, 2 cores, 8GiB RAM}
@@ -68,9 +70,7 @@ hosts:
           ubuntu2404-x64-1: {ip: 20.115.98.159, user: azureuser}
           rhel10-x64-1: {ip: 20.117.121.109, user: azureuser}
           win2022-x64-1: {ip: 51.132.234.42, user: adoptopenjdk}
-          win2022-x64-2: {ip: 20.77.53.16, user: adoptopenjdk}
-          win2022-x64-3: {ip: 20.68.165.213, user: adoptopenjdk}
-          win2022-x64-4: {ip: 20.77.112.43, user: adoptopenjdk}
+          win11-x64-1: {ip: 20.56.162.171, user: adoptopenjdk}
           win11-aarch64-1: {ip: 20.4.31.184, user: adoptopenjdk}
           win11-aarch64-2: {ip: 108.143.205.79, user: adoptopenjdk}
           win11-aarch64-3: {ip: 4.231.23.141, user: adoptopenjdk}
@@ -118,13 +118,20 @@ hosts:
       - rise:
           ubuntu2404-riscv64-1: {ip: 62.210.163.198, user: ubuntu}
           ubuntu2404-riscv64-2: {ip: 62.210.163.10, user: ubuntu}
-          ubuntu2404-riscv64-3: {ip: 62.210.163.99, user: ubuntu}
           ubuntu2404-riscv64-4: {ip: 62.210.163.103, user: ubuntu}
           ubuntu2404-riscv64-5: {ip: 62.210.163.45, user: ubuntu}
           ubuntu2404-riscv64-6: {ip: 62.210.163.135, user: ubuntu}
           ubuntu2404-riscv64-7: {ip: 62.210.163.137, user: ubuntu}
           ubuntu2404-riscv64-8: {ip: 62.210.163.38, user: ubuntu}
           ubuntu2404-riscv64-9: {ip: 62.210.163.36, user: ubuntu}
+          ubuntu2404-riscv64-18: {ip: 62.210.163.61, user: ubuntu}
+          ubuntu2404-riscv64-19: {ip: 62.210.163.189, user: ubuntu}
+          ubuntu2404-riscv64-20: {ip: 62.210.163.62, user: ubuntu}
+          ubuntu2404-riscv64-21: {ip: 62.210.163.94, user: ubuntu}
+          ubuntu2404-riscv64-22: {ip: 62.210.163.126, user: ubuntu}
+          ubuntu2404-riscv64-23: {ip: 62.210.163.158, user: ubuntu}
+          ubuntu2404-riscv64-24: {ip: 62.210.163.190, user: ubuntu}
+          ubuntu2404-riscv64-25: {ip: 62.210.163.222, user: ubuntu}
 
       - skytap:
           ubuntu2404-ppc64le-1: {ip: 20.61.136.211}

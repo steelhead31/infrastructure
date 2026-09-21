@@ -25,10 +25,10 @@ jobs:
       max-parallel: 4
       matrix:
        include:
-         - os: alpine3.20
-           dockerfile: "Dockerfile.alp320"
+         - os: alpine3.24
+           dockerfile: "Dockerfile.alp324"
     steps:
-    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Test Dockerfile on ${{ matrix.os }}
       env:
         DOCKERFILE: ${{ matrix.dockerfile }}
@@ -49,7 +49,7 @@ jobs:
          - os: centos-stream-10
            dockerfile: "Dockerfile.centstream10"
     steps:
-    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Test Dockerfile on ${{ matrix.os }}
       env:
         DOCKERFILE: ${{ matrix.dockerfile }}
@@ -66,7 +66,7 @@ jobs:
          - os: fedora41
            dockerfile: "Dockerfile.f41"
     steps:
-    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Test Dockerfile on ${{ matrix.os }}
       env:
         DOCKERFILE: ${{ matrix.dockerfile }}
@@ -80,14 +80,14 @@ jobs:
       max-parallel: 4
       matrix:
        include:
-         - os: ubuntu20.04
-           dockerfile: "Dockerfile.u2004"
          - os: ubuntu22.04
            dockerfile: "Dockerfile.u2204"
          - os: ubuntu24.04
            dockerfile: "Dockerfile.u2404"
+         - os: ubuntu26.04
+           dockerfile: "Dockerfile.u2604"
     steps:
-    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Test Dockerfile on ${{ matrix.os }}
       env:
         DOCKERFILE: ${{ matrix.dockerfile }}

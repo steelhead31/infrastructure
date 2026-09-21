@@ -12,3 +12,6 @@ jenkins-as-code/Vagrant-Scripts/
 jenkins-as-code/ansible/hosts
 jenkins-as-code/Vagrantfile
 jenkins-as-code/data/
+EOL_audit/.env
+tools/jenkins-capacity-report/logs/
+tools/jenkins-capacity-report/data/

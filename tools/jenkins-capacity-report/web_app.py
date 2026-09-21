@@ -81,6 +81,12 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 APPLICATION_ROOT = os.environ.get('APPLICATION_ROOT', '')
 if APPLICATION_ROOT:
     app.config['APPLICATION_ROOT'] = APPLICATION_ROOT
+# Add Jenkins URL to template context for all templates
+@app.context_processor
+def inject_jenkins_url():
+    """Inject Jenkins URL into all templates."""
+    return {'jenkins_url': config.jenkins_url}
+
 
 # Initialize background scheduler for automatic metrics recording
 scheduler = BackgroundScheduler()
@@ -514,6 +520,7 @@ def prepare_detailed_nodes(nodes):
             'os': extract_os_from_name(node.name),
             'os_type': get_os_type(extract_os_from_name(node.name)),
             'arch': get_node_architecture(node),
+            'java_version': node.java_version or 'N/A',
             'container_host': extract_container_host(node),
             'status': 'OFFLINE' if node.offline else 'ONLINE',
             'temp_offline': node.temporarily_offline,
@@ -612,6 +619,80 @@ def is_cloud_config_available():
     except Exception as e:
         logger.error(f"Error checking cloud config availability: {e}")
         return False
+
+
+def get_eol_data():
+    """Read EOL status data from the JSON file produced by check_os_eol.py.
+
+    Returns:
+        Tuple of (list, str|None):
+          - list of dicts with keys: name, os, version, isEOL, eolFrom, latestLts
+            sorted by os (nulls last) then name.
+            Empty list if the file does not exist or cannot be parsed.
+          - ISO-8601 timestamp string from the file, or None if unavailable.
+    """
+    try:
+        eol_path = Path(config.eol_status_file)
+        if not eol_path.exists():
+            return [], None
+        import json
+        with eol_path.open() as f:
+            raw = json.load(f)
+        # Support both the new wrapped format {timestamp, EOL_data:[...]}
+        # and the legacy flat-list format for backwards compatibility.
+        if isinstance(raw, dict):
+            data = raw.get('EOL_data', [])
+            eol_timestamp = raw.get('timestamp')
+        else:
+            data = raw
+            eol_timestamp = None
+        # Sort: known OS first (alphabetically), then nulls; secondary sort by name
+        data.sort(key=lambda d: (d.get('os') is None, d.get('os') or '', d.get('name') or ''))
+        return data, eol_timestamp
+    except Exception as e:
+        logger.error(f"Error reading EOL status file: {e}")
+        return [], None
+
+
+def is_eol_data_available():
+    """Return True if the EOL status file exists and is non-empty."""
+    try:
+        eol_path = Path(config.eol_status_file)
+        return eol_path.exists() and eol_path.stat().st_size > 2
+    except Exception:
+        return False
+
+
+MACHINE_AUDIT_DIR = Path(os.getenv("MACHINE_AUDIT_DIR", "./data/machine_audit"))
+
+
+def get_machine_audit_data():
+    """Read all machine audit JSON files from MACHINE_AUDIT_DIR.
+
+    Returns a list of dicts, each containing the parsed JSON content plus a
+    ``machine_name`` key derived from the filename
+    (``<machine_name>_machine_info.json``).
+    Sorted alphabetically by machine_name.  Returns [] if the directory does
+    not exist or contains no matching files.
+    """
+    import json
+
+    results = []
+    if not MACHINE_AUDIT_DIR.exists():
+        return results
+
+    for json_file in sorted(MACHINE_AUDIT_DIR.glob("*_machine_info.json")):
+        machine_name = json_file.name.replace("_machine_info.json", "")
+        try:
+            with json_file.open() as f:
+                data = json.load(f)
+            data["machine_name"] = machine_name
+            results.append(data)
+        except Exception as e:
+            logger.warning(f"Could not parse machine audit file {json_file}: {e}")
+
+    return results
+
 
 def recalculate_summary(nodes):
     """Recalculate capacity summary for a filtered list of nodes.
@@ -778,9 +859,15 @@ def index():
     cloud_capacity = get_cloud_capacity_data()
     cloud_config_available = is_cloud_config_available()
 
+    # EOL status data
+    eol_data, eol_timestamp = get_eol_data()
+    eol_data_available = is_eol_data_available()
+
     # Get current user role for UI permissions
     current_user = get_current_user()
     current_role = get_current_user_role()
+
+    machine_audit_data = get_machine_audit_data()
 
     return render_template(
         'dashboard.html',
@@ -793,6 +880,10 @@ def index():
         excluded_quick_stats=excluded_quick_stats,
         cloud_capacity=cloud_capacity,
         cloud_config_available=cloud_config_available,
+        eol_data=eol_data,
+        eol_data_available=eol_data_available,
+        eol_timestamp=eol_timestamp,
+        machine_audit_data=machine_audit_data,
         timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         current_user=current_user,
         current_role=current_role
@@ -1233,6 +1324,22 @@ def get_rbac_status():
     })
 
 
+@app.route('/api/eol-status', methods=['GET'])
+@optional_auth
+def eol_status():
+    """API endpoint returning EOL status data from the pre-generated JSON file."""
+    data, eol_timestamp = get_eol_data()
+    return jsonify({
+        'available': len(data) > 0,
+        'timestamp': eol_timestamp,
+        'data': data,
+        'count': len(data),
+        'eol_count': sum(1 for d in data if d.get('isEOL') is True),
+        'supported_count': sum(1 for d in data if d.get('isEOL') is False),
+        'unknown_count': sum(1 for d in data if d.get('isEOL') is None),
+    })
+
+
 @app.route('/api/excluded-nodes', methods=['GET'])
 @optional_auth
 def get_excluded_nodes():
@@ -1415,6 +1522,7 @@ def node_detail(node_name):
 
 
 @app.route('/category/<category_name>')
+@optional_auth
 def category_listing(category_name):
     """Category listing page showing all nodes of a specific type."""
     all_nodes, summary = get_jenkins_data()
@@ -1483,6 +1591,7 @@ def category_listing(category_name):
 
 
 @app.route('/category/<category_name>/<subcategory>')
+@optional_auth
 def subcategory_listing(category_name, subcategory):
     """Subcategory listing page showing Docker or non-Docker nodes."""
     all_nodes, summary = get_jenkins_data()
@@ -1704,6 +1813,7 @@ def filter_by_status(status):
 
 
 @app.route('/label/<label_name>')
+@optional_auth
 def label_summary(label_name):
     """Label summary page showing all nodes with a specific label."""
     all_nodes, summary = get_jenkins_data()
